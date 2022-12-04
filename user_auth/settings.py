@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'django_extensions',
     
     'accounts',
     'authentications',
@@ -109,6 +116,67 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# from  rest_framework_simplejwt.authentication import JWTAuthentication, JWTTokenUserAuthentication
+# set rest default classes
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', # for like ?page=5
+    'PAGE_SIZE': 5,
+    'DATE_FORMAT': "%d %b %Y",
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication', # for microservice
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+            'rest_framework.renderers.JSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# for api docs
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'social user auth api',
+    'DESCRIPTION': '',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+}
+
+# pip install PyJWT==2.3.0 cryptography==36.0.1
+# from rest_framework_simplejwt.models import TokenUser
+
+# for jwt token
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=500),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti'
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

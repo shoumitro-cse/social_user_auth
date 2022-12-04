@@ -13,15 +13,40 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
+from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView
+)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 urlpatterns = [
     path('user-auth/admin/', admin.site.urls),
+    
+    # add accounts urls
+    path('user-auth/accounts/', include('accounts.urls')),
+
+    # Token authentication for API
+    path('user-auth/token/', TokenObtainPairView.as_view(),
+         name='token_obtain_pair_api'),
+    path('user-auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh_api'),
+
+    # for API docs
+    path('user-auth/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('user-auth/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    #path('user-auth/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('user-auth/redocs/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
+
 
 urlpatterns += static(settings.STATIC_URL,
                       document_root=settings.STATIC_ROOT)
