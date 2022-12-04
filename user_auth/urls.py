@@ -33,7 +33,7 @@ urlpatterns = [
     path('user-auth/admin/', admin.site.urls),
     
     # add accounts urls
-    path('user-auth/accounts/', include('accounts.urls')),
+    path('user-auth/', include('authentications.urls')),
 
     # Token authentication for API
     path('user-auth/token/', TokenObtainPairView.as_view(),
