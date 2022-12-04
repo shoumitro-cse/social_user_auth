@@ -123,8 +123,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
     'DATE_FORMAT': "%d %b %Y",
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication', # for microservice
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        #'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication', # without user model data
+        'rest_framework_simplejwt.authentication.JWTAuthentication', # with user model data
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
