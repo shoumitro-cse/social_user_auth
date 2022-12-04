@@ -138,7 +138,7 @@ REST_FRAMEWORK = {
 
 # for api docs
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'social user auth api',
+    'TITLE': 'User auth api',
     'DESCRIPTION': '',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
